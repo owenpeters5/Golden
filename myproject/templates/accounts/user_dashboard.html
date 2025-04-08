@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="dashboard">
+    <h1>Welcome, {{ user.username }}!</h1>
+    
+    <div class="calendar-container">
+        <div class="calendar-header">
+            <button onclick="previousWeek()">&lt; Previous</button>
+            <h2 id="currentWeek">Current Week</h2>
+            <button onclick="nextWeek()">Next &gt;</button>
+        </div>
+        
+        <div class="calendar">
+            <div class="weekdays">
+                <div>Sunday</div>
+                <div>Monday</div>
+                <div>Tuesday</div>
+                <div>Wednesday</div>
+                <div>Thursday</div>
+                <div>Friday</div>
+                <div>Saturday</div>
+            </div>
+            <div id="calendar-body" class="calendar-body">
+                <!-- Calendar cells will be inserted here by JavaScript -->
+            </div>
+        </div>
+    </div>
+    
+    <div class="actions">
+        <a href="{% url 'accounts:logout' %}" class="logout-btn">Logout</a>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/calendar.js' %}"></script>
+{% endblock %} 

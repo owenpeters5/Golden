@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<h1>Welcome to My Project</h1>
+<div>
+    <h2>Login Options:</h2>
+    <ul>
+        <li><a href="{% url 'accounts:admin_login' %}">Admin Login</a></li>
+        <li><a href="{% url 'accounts:user_login' %}">User Login</a></li>
+    </ul>
+</div>
+{% endblock %} 
