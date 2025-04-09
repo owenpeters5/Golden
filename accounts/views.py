@@ -5,32 +5,25 @@ from django.contrib.auth.models import User
 
 # Create your views here.
 
-def admin_login(request):
+def login_view(request):
     if request.method == 'POST':
         username = request.POST['username']
         password = request.POST['password']
         user = authenticate(request, username=username, password=password)
-        if user is not None and user.is_staff:
+        if user is not None:
             login(request, user)
-            return redirect('accounts:admin_dashboard')
+            if user.is_staff:  # Admin user
+                return redirect('accounts:admin_dashboard')
+            else:  # Regular user
+                return redirect('accounts:user_dashboard')
         else:
-            return render(request, 'accounts/admin_login.html', {'error': 'Invalid credentials'})
-    return render(request, 'accounts/admin_login.html')
-
-def user_login(request):
-    if request.method == 'POST':
-        username = request.POST['username']
-        password = request.POST['password']
-        user = authenticate(request, username=username, password=password)
-        if user is not None and not user.is_staff:
-            login(request, user)
-            return redirect('accounts:user_dashboard')
-        else:
-            return render(request, 'accounts/user_login.html', {'error': 'Invalid credentials'})
-    return render(request, 'accounts/user_login.html')
+            return render(request, 'main/home.html', {'error': 'Invalid username or password'})
+    return render(request, 'main/home.html')
 
 @user_passes_test(lambda u: u.is_staff)
 def admin_dashboard(request):
+    if not request.user.is_staff:
+        return redirect('accounts:user_dashboard')
     context = {
         'total_users': User.objects.count(),
         'active_users': User.objects.filter(is_active=True).count(),
@@ -39,4 +32,6 @@ def admin_dashboard(request):
 
 @login_required
 def user_dashboard(request):
+    if request.user.is_staff:
+        return redirect('accounts:admin_dashboard')
     return render(request, 'accounts/user_dashboard.html')
